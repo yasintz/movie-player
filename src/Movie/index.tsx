@@ -1,12 +1,13 @@
 import parseSRT, { CaptionType } from 'srt-to-json';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Maximize, Eye, EyeOff } from 'react-feather';
+import { Maximize, Eye, EyeOff, Settings } from 'react-feather';
 import useAnimationFrame from '../hooks/useAnimationFrame';
 import useFullscreen from '../hooks/useFullscreen';
 import useMovieCache from '../hooks/useMovieCache';
 import ActionButtonGroup from '../components/ActionButton/Group';
 import ActionButton from '../components/ActionButton';
 import './movie.css';
+import CaptionAdjustment from './CaptionAdjustment';
 
 type PropsType = {
   src: string;
@@ -16,6 +17,7 @@ type PropsType = {
 
 function Movie({ src, caption, name }: PropsType) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showAdjustment, setShowAdjustment] = useState(false);
   const { movies, updateTime: updateCache } = useMovieCache();
   const [currentCaption, setCurrentCaption] = useState<CaptionType>();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -24,9 +26,18 @@ function Movie({ src, caption, name }: PropsType) {
     current: document.body,
   });
 
-  const captions = useMemo(() => (caption ? parseSRT(caption) : []), [caption]);
+  const currentMovie = movies.find((m) => m.name === name);
+  const captions = useMemo(
+    () =>
+      (caption ? parseSRT(caption) : []).map((cap) => ({
+        ...cap,
+        start: cap.start + (currentMovie?.adjustment || 0),
+        end: cap.end + (currentMovie?.adjustment || 0),
+      })),
+    [caption, currentMovie?.adjustment]
+  );
 
-  const backupTime = movies.find((m) => m.name === name)?.time;
+  const backupTime = currentMovie?.time;
 
   useAnimationFrame(() => {
     const video = videoRef.current;
@@ -35,8 +46,8 @@ function Movie({ src, caption, name }: PropsType) {
       return;
     }
 
-    updateCache(name, video.currentTime);
-    const time = video.currentTime - 2.5;
+    updateCache(name, { time: video.currentTime });
+    const time = video.currentTime;
     const captionObj = captions.find((i) => time >= i.start && time < i.end);
 
     setCurrentCaption(captionObj);
@@ -69,6 +80,19 @@ function Movie({ src, caption, name }: PropsType) {
         </div>
       )}
 
+      {showAdjustment && currentMovie && (
+        <CaptionAdjustment
+          captions={captions}
+          movie={currentMovie}
+          onCaptionClick={(caption) => {
+            if (videoRef.current) {
+              videoRef.current.currentTime = caption.start;
+            }
+          }}
+          onChange={(adjustment) => updateCache(name, { adjustment })}
+        />
+      )}
+
       <ActionButtonGroup autoHide={isPlaying}>
         <ActionButton
           position={{ x: 1, y: 0 }}
@@ -79,6 +103,11 @@ function Movie({ src, caption, name }: PropsType) {
           position={{ x: 0, y: 1 }}
           onClick={() => setHideCaption((prev) => !prev)}
           icon={hideCaption ? <Eye /> : <EyeOff />}
+        />
+        <ActionButton
+          position={{ x: 1, y: 1 }}
+          onClick={() => setShowAdjustment((prev) => !prev)}
+          icon={<Settings />}
         />
       </ActionButtonGroup>
     </>
