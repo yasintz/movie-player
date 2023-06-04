@@ -10,12 +10,17 @@ export type MovieType = {
 interface MovieCacheState {
   movies: Array<MovieType>;
   updateTime: (name: string, value: Partial<Omit<MovieType, 'name'>>) => void;
+  delete: (name: string) => void;
 }
 
 const useMovieCache = create<MovieCacheState>()(
   persist(
     (set) => ({
       movies: [],
+      delete: (name) =>
+        set((state) => ({
+          movies: state.movies.filter((i) => i.name !== name),
+        })),
       updateTime: (name, newValues) =>
         set((state) => {
           const previous = state.movies.find((m) => m.name === name);

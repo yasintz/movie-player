@@ -12,7 +12,7 @@ type DataType = {
 
 function App() {
   const [data, setData] = useState<DataType>();
-  const { movies } = useMovieCache();
+  const { movies, delete: deleteCache } = useMovieCache();
 
   const onFileInputChange: React.ChangeEventHandler<HTMLInputElement> = (
     event
@@ -65,7 +65,8 @@ function App() {
       <ul>
         {movies.map((movie) => (
           <li key={movie.name}>
-            {movie.name}: {movie.time}
+            {movie.name}: {movie.time} -{' '}
+            <button onClick={() => deleteCache(movie.name)}>delete</button>
           </li>
         ))}
       </ul>
