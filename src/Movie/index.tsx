@@ -17,7 +17,7 @@ type PropsType = {
 function Movie({ src, caption, name }: PropsType) {
   const [isPlaying, setIsPlaying] = useState(false);
   const { movies, updateTime: updateCache } = useMovieCache();
-    const [currentCaption, setCurrentCaption] = useState<CaptionType>();
+  const [currentCaption, setCurrentCaption] = useState<CaptionType>();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hideCaption, setHideCaption] = useState(false);
   const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen({
