@@ -11,12 +11,11 @@
 }
 .mp-caption,
 .mp-caption > span {
-  font-size: 38px;
+  font-size: 34px;
   color: white;
 }
 .caption-container {
   position: fixed;
-  bottom: 108px;
   width: 100%;
   display: flex;
   align-items: center;

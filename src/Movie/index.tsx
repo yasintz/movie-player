@@ -1,6 +1,6 @@
 import parseSRT, { CaptionType } from 'srt-to-json';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Maximize, Settings, Type } from 'react-feather';
+import { Maximize, Type, AlignLeft, Move } from 'react-feather';
 import useAnimationFrame from '../hooks/useAnimationFrame';
 import useFullscreen from '../hooks/useFullscreen';
 import useMovieCache from '../hooks/useMovieCache';
@@ -26,6 +26,9 @@ function Movie({ src, caption, name }: PropsType) {
   const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen({
     current: document.body,
   });
+
+  const [showCaptionPositioner, setShowCaptionPositioner] = useState(false);
+  const [captionPosition, setCaptionPosition] = useState({ y: 0.07 });
 
   useKeyboardShortcut(
     ['ArrowRight'],
@@ -98,7 +101,12 @@ function Movie({ src, caption, name }: PropsType) {
         onPause={() => setIsPlaying(false)}
       />
       {currentCaption && !hideCaption && (
-        <div className="caption-container">
+        <div
+          className="caption-container"
+          style={{
+            bottom: `${captionPosition.y * 100}%`,
+          }}
+        >
           <div className="mp-caption">{currentCaption.text}</div>
         </div>
       )}
@@ -117,6 +125,23 @@ function Movie({ src, caption, name }: PropsType) {
         />
       )}
 
+      {showCaptionPositioner && (
+        <label>
+          <span style={{ width: 48, display: 'inline-block' }}>
+            {captionPosition.y}
+          </span>
+          <input
+            type="range"
+            min={0}
+            max={1000}
+            value={(captionPosition.y * 1000).toString()}
+            onChange={(e) =>
+              setCaptionPosition({ y: parseInt(e.target.value, 10) / 1000 })
+            }
+          />
+        </label>
+      )}
+
       <ActionButtonGroup autoHide={isPlaying}>
         <ActionButton
           position={{ x: 1, y: 0 }}
@@ -132,8 +157,14 @@ function Movie({ src, caption, name }: PropsType) {
         <ActionButton
           position={{ x: 1, y: 1 }}
           onClick={() => setShowAdjustment((prev) => !prev)}
-          icon={<Settings />}
+          icon={<AlignLeft />}
           closed={!showAdjustment}
+        />
+        <ActionButton
+          position={{ x: 0, y: 2 }}
+          onClick={() => setShowCaptionPositioner((prev) => !prev)}
+          icon={<Move />}
+          closed={!showCaptionPositioner}
         />
       </ActionButtonGroup>
     </>
