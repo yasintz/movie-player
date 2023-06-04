@@ -33,7 +33,7 @@ function Movie({ src, caption, name }: PropsType) {
   useKeyboardShortcut(
     ['ArrowRight'],
     () => {
-      if (videoRef.current) videoRef.current.currentTime += 5;
+      if (videoRef.current) videoRef.current.currentTime -= 25;
     },
     {
       overrideSystem: true,
@@ -44,7 +44,7 @@ function Movie({ src, caption, name }: PropsType) {
   useKeyboardShortcut(
     ['ArrowLeft'],
     () => {
-      if (videoRef.current) videoRef.current.currentTime -= 5;
+      if (videoRef.current) videoRef.current.currentTime += 25;
     },
     {
       overrideSystem: true,
