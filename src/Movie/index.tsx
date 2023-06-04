@@ -6,8 +6,9 @@ import useFullscreen from '../hooks/useFullscreen';
 import useMovieCache from '../hooks/useMovieCache';
 import ActionButtonGroup from '../components/ActionButton/Group';
 import ActionButton from '../components/ActionButton';
-import './movie.css';
 import CaptionAdjustment from './CaptionAdjustment';
+import useKeyboardShortcut from '../hooks/useKeyboard';
+import './movie.css';
 
 type PropsType = {
   src: string;
@@ -25,6 +26,29 @@ function Movie({ src, caption, name }: PropsType) {
   const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen({
     current: document.body,
   });
+
+  useKeyboardShortcut(
+    ['ArrowRight'],
+    () => {
+      if (videoRef.current) videoRef.current.currentTime += 5;
+    },
+    {
+      overrideSystem: true,
+      ignoreInputFields: false,
+      repeatOnHold: true,
+    }
+  );
+  useKeyboardShortcut(
+    ['ArrowLeft'],
+    () => {
+      if (videoRef.current) videoRef.current.currentTime -= 5;
+    },
+    {
+      overrideSystem: true,
+      ignoreInputFields: false,
+      repeatOnHold: true,
+    }
+  );
 
   const currentMovie = movies.find((m) => m.name === name);
   const captions = useMemo(

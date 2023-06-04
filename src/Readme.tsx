@@ -20,7 +20,7 @@ const Readme = () => {
         controls
         style={{ width: 300, height: 200 }}
       />
-      <p>
+      <div>
         {Object.entries(links).map(([name, link]) => (
           <div key={link}>
             <a href={link} target="_blank">
@@ -37,7 +37,7 @@ const Readme = () => {
             defaultValue='ffmpeg -protocol_whitelist file,http,https,tcp,tls,crypto -i "https://example.com/index.m3u8" -c copy video.mp4'
           />
         </p>
-      </p>
+      </div>
     </div>
   );
 };
