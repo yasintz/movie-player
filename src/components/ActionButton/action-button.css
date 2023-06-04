@@ -1,0 +1,19 @@
+.video-action-button {
+  position: fixed;
+  background-color: #2f363d;
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.video-action-button-group {
+  opacity: 1;
+  transition: opacity ease 0.3s;
+}
+.video-action-button-group.hide {
+  opacity: 0;
+}
