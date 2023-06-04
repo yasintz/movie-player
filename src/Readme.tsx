@@ -23,7 +23,7 @@ const Readme = () => {
       <p>
         {Object.entries(links).map(([name, link]) => (
           <div key={link}>
-            <a href={link} target="_blank">
+            <a href={link} target="_blank" style={{ color: 'white' }}>
               {name}
             </a>
           </div>
