@@ -5,9 +5,10 @@ type PropsType = {
   onClick: () => void;
   icon: JSX.Element;
   position: { x: number; y: number };
+  closed?: boolean;
 };
 
-const ActionButton = ({ onClick, icon, position }: PropsType) => {
+const ActionButton = ({ onClick, icon, position, closed }: PropsType) => {
   const iconEl = React.cloneElement(icon, { size: 12, color: 'white' });
 
   const style = useMemo(() => {
@@ -19,7 +20,10 @@ const ActionButton = ({ onClick, icon, position }: PropsType) => {
 
   return (
     <div className="video-action-button" onClick={onClick} style={style}>
-      {iconEl}
+      <div>
+        {iconEl}
+        {closed && <span className="closed" />}
+      </div>
     </div>
   );
 };

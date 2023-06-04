@@ -1,6 +1,6 @@
 import parseSRT, { CaptionType } from 'srt-to-json';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Maximize, Eye, EyeOff, Settings } from 'react-feather';
+import { Maximize, Settings, Type } from 'react-feather';
 import useAnimationFrame from '../hooks/useAnimationFrame';
 import useFullscreen from '../hooks/useFullscreen';
 import useMovieCache from '../hooks/useMovieCache';
@@ -67,7 +67,6 @@ function Movie({ src, caption, name }: PropsType) {
         controls
         src={src}
         ref={videoRef}
-        onDoubleClick={isFullscreen ? exitFullscreen : requestFullscreen}
         onClick={() =>
           isPlaying ? videoRef.current?.pause() : videoRef.current?.play()
         }
@@ -103,12 +102,14 @@ function Movie({ src, caption, name }: PropsType) {
         <ActionButton
           position={{ x: 0, y: 1 }}
           onClick={() => setHideCaption((prev) => !prev)}
-          icon={hideCaption ? <Eye /> : <EyeOff />}
+          icon={<Type />}
+          closed={!hideCaption}
         />
         <ActionButton
           position={{ x: 1, y: 1 }}
           onClick={() => setShowAdjustment((prev) => !prev)}
           icon={<Settings />}
+          closed={showAdjustment}
         />
       </ActionButtonGroup>
     </>
