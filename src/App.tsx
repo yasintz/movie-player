@@ -7,60 +7,75 @@ import Readme from './Readme';
 type DataType = {
   videoName: string;
   videoUrl: string;
-  caption?: string;
+  srtFiles: string[];
 };
+
+function readFile(file: File) {
+  return new Promise<string>((res, rej) => {
+    const reader = new FileReader();
+
+    reader.readAsText(file, 'UTF-8');
+    reader.onload = (evt) => {
+      const content = evt.target?.result;
+      if (!content || typeof content !== 'string') {
+        rej('Failed');
+        return;
+      }
+
+      res(content);
+    };
+  });
+}
 
 function App() {
   const [data, setData] = useState<DataType>();
+  const [play, setPlay] = useState(false);
   const { movies, delete: deleteCache } = useMovieCache();
 
-  const onFileInputChange: React.ChangeEventHandler<HTMLInputElement> = (
+  const onFileInputChange: React.ChangeEventHandler<HTMLInputElement> = async (
     event
   ) => {
     const files = Array.from(event.target.files || []);
 
-    const captionFile = files.find((file) => file.name.endsWith('srt'));
+    const srtFileInstances = files.filter((file) => file.name.endsWith('srt'));
+    const srtFiles = (
+      await Promise.all(srtFileInstances.map((f) => readFile(f)))
+    ).concat(data?.srtFiles || []);
+
     const videoFile = files.find((file) => file.type.startsWith('video'));
 
     if (!videoFile) {
-      alert('Please upload a video');
+      setData((prev) => ({
+        srtFiles,
+        videoName: prev?.videoName || '',
+        videoUrl: prev?.videoUrl || '',
+      }));
       return;
     }
 
     const videoUrl = URL.createObjectURL(videoFile);
-    const videoData: Pick<DataType, 'videoName' | 'videoUrl'> = {
+    setData({
       videoName: videoFile.name,
       videoUrl,
-    };
-
-    if (!captionFile) {
-      setData(videoData);
-      return;
-    }
-
-    const reader = new FileReader();
-
-    reader.readAsText(captionFile, 'UTF-8');
-    reader.onload = (evt) => {
-      const caption = evt.target?.result;
-      if (!caption || typeof caption !== 'string') {
-        alert("File couldn't read");
-        return;
-      }
-
-      setData({ caption, ...videoData });
-    };
+      srtFiles: srtFiles,
+    });
   };
 
-  if (data) {
+  if (play && data) {
     return (
-      <Movie src={data.videoUrl} caption={data.caption} name={data.videoName} />
+      <Movie
+        src={data.videoUrl}
+        srtFiles={data.srtFiles}
+        name={data.videoName}
+      />
     );
   }
 
   return (
     <div>
       <input type="file" multiple onChange={onFileInputChange} />
+      <button onClick={() => setPlay(true)}>Play</button>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
 
       <ul>
         {movies.map((movie) => (

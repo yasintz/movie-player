@@ -13,19 +13,21 @@ import './movie.css';
 type PropsType = {
   src: string;
   name: string;
-  caption?: string;
+  srtFiles: string[];
 };
 
-function Movie({ src, caption, name }: PropsType) {
+function Movie({ src, srtFiles, name }: PropsType) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [captionIndex, setCaptionIndex] = useState(0);
   const [showAdjustment, setShowAdjustment] = useState(false);
   const { movies, updateTime: updateCache } = useMovieCache();
   const [currentCaption, setCurrentCaption] = useState<CaptionType>();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [hideCaption, setHideCaption] = useState(false);
   const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen({
     current: document.body,
   });
+
+  const caption = srtFiles[captionIndex];
 
   const [showCaptionPositioner, setShowCaptionPositioner] = useState(false);
   const [captionPosition, setCaptionPosition] = useState({ y: 0.07 });
@@ -100,7 +102,7 @@ function Movie({ src, caption, name }: PropsType) {
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
       />
-      {currentCaption && !hideCaption && (
+      {currentCaption && (
         <div
           className="caption-container"
           style={{
@@ -150,9 +152,9 @@ function Movie({ src, caption, name }: PropsType) {
         />
         <ActionButton
           position={{ x: 0, y: 1 }}
-          onClick={() => setHideCaption((prev) => !prev)}
+          onClick={() => setCaptionIndex((prev) => (caption ? prev + 1 : 0))}
           icon={<Type />}
-          closed={hideCaption}
+          closed={!caption}
         />
         <ActionButton
           position={{ x: 1, y: 1 }}
