@@ -103,13 +103,13 @@ function Movie({ src, caption, name }: PropsType) {
           position={{ x: 0, y: 1 }}
           onClick={() => setHideCaption((prev) => !prev)}
           icon={<Type />}
-          closed={!hideCaption}
+          closed={hideCaption}
         />
         <ActionButton
           position={{ x: 1, y: 1 }}
           onClick={() => setShowAdjustment((prev) => !prev)}
           icon={<Settings />}
-          closed={showAdjustment}
+          closed={!showAdjustment}
         />
       </ActionButtonGroup>
     </>
