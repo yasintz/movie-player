@@ -90,6 +90,7 @@ function Movie({ src, caption, name }: PropsType) {
             }
           }}
           onChange={(adjustment) => updateCache(name, { adjustment })}
+          activeCaption={currentCaption}
         />
       )}
 

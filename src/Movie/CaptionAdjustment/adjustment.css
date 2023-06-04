@@ -1,0 +1,25 @@
+.adjustment-container {
+  padding: 16px;
+}
+.adjustment-container .desc {
+  margin-top: 12px;
+}
+
+.adjustment-item-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.adjustment-item {
+  padding: 8px;
+  border: 0px solid white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.adjustment-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.adjustment-item.active {
+  border-width: 1px;
+}
