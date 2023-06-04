@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Movie from './Movie';
 import './App.css';
 import useMovieCache from './hooks/useMovieCache';
+import Readme from './Readme';
 
 type DataType = {
   videoName: string;
@@ -68,13 +69,8 @@ function App() {
           </li>
         ))}
       </ul>
-      <div>
-        <h4>Get Started</h4>
-        <p>
-          You can upload a video and srt file and start to watch. if you leave
-          before finish, upload same file to continue
-        </p>
-      </div>
+      <hr />
+      <Readme />
     </div>
   );
 }
