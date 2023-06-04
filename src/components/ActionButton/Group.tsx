@@ -10,7 +10,7 @@ const ActionButtonGroup = ({ children, autoHide }: ActionButtonGroupProps) => {
   const [hide, setHide] = useState(true);
 
   useEffect(() => {
-    let timeout: number;
+    let timeout: NodeJS.Timeout;
 
     const mouseMoveListener = () => {
       setHide(false);
