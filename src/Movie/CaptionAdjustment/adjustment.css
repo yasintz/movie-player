@@ -11,15 +11,16 @@
 }
 
 .adjustment-item {
+  box-sizing: border-box;
   padding: 8px;
-  border: 0px solid white;
+  border: 1px solid transparent;
   border-radius: 6px;
   cursor: pointer;
 }
 .adjustment-item:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+  border-color: #2f363d;
 }
 
 .adjustment-item.active {
-  border-width: 1px;
+  background-color: rgba(0, 0, 0, 0.08);
 }
