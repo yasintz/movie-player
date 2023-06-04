@@ -1,0 +1,23 @@
+.downloadCommandContainer {
+}
+
+.commandRow {
+  font-size: 18px;
+  button {
+    all: none;
+    border: none;
+    font-size: 18px;
+    background-color: #161618;
+    padding: 4px 10px;
+    color: #b2ccd6;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #161618ee;
+    }
+    &:active {
+      background-color: #131315;
+    }
+  }
+}

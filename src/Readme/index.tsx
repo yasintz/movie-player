@@ -1,3 +1,5 @@
+import DownloadCommand from './DownloadCommand';
+
 const Readme = () => {
   const links = {
     Extension:
@@ -30,13 +32,7 @@ const Readme = () => {
         ))}
 
         <br />
-        <p>
-          Example Download Command:{' '}
-          <input
-            style={{ width: '100%' }}
-            defaultValue='ffmpeg -protocol_whitelist file,http,https,tcp,tls,crypto -i "https://example.com/index.m3u8" -c copy video.mp4'
-          />
-        </p>
+        <DownloadCommand />
       </div>
     </div>
   );
