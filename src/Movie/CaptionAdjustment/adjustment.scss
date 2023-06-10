@@ -16,6 +16,15 @@
   border: 1px solid transparent;
   border-radius: 6px;
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  & input {
+    width: 40px;
+    margin-right: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 2px;
+  }
 }
 .adjustment-item:hover {
   border-color: #2f363d;

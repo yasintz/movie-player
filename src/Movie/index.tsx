@@ -20,7 +20,7 @@ function Movie({ src, srtFiles, name }: PropsType) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [captionIndex, setCaptionIndex] = useState(0);
   const [showAdjustment, setShowAdjustment] = useState(false);
-  const { movies, updateTime: updateCache } = useMovieCache();
+  const { movies, updateTime, setAdjustments } = useMovieCache();
   const [currentCaption, setCurrentCaption] = useState<CaptionType>();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { isFullscreen, requestFullscreen, exitFullscreen } = useFullscreen({
@@ -56,15 +56,29 @@ function Movie({ src, srtFiles, name }: PropsType) {
   );
 
   const currentMovie = movies.find((m) => m.name === name);
-  const captions = useMemo(
-    () =>
-      (caption ? parseSRT(caption) : []).map((cap) => ({
+  const captions = useMemo(() => {
+    const parsedCaptions = (caption ? parseSRT(caption) : []).filter(
+      (i) => i.text.toLowerCase() !== 'www.my-subs.co'
+    );
+
+    return parsedCaptions.map((cap, index) => {
+      const previousCaptionIds = parsedCaptions
+        .slice(0, index + 1)
+        .map((i) => i.id);
+
+      const adjustments =
+        currentMovie?.adjustment
+          ?.filter((i) => previousCaptionIds.includes(i.captionId))
+          .map((i) => i.second) || [];
+
+      const totalAdjustment = adjustments.reduce((acc, cur) => acc + cur, 0);
+      return {
         ...cap,
-        start: cap.start + (currentMovie?.adjustment || 0),
-        end: cap.end + (currentMovie?.adjustment || 0),
-      })),
-    [caption, currentMovie?.adjustment]
-  );
+        start: cap.start + totalAdjustment,
+        end: cap.end + totalAdjustment,
+      };
+    });
+  }, [caption, currentMovie?.adjustment]);
 
   const backupTime = currentMovie?.time;
 
@@ -75,7 +89,7 @@ function Movie({ src, srtFiles, name }: PropsType) {
       return;
     }
 
-    updateCache(name, { time: video.currentTime });
+    updateTime(name, video.currentTime);
     const time = video.currentTime;
     const captionObj = captions.find((i) => time >= i.start && time < i.end);
 
@@ -122,8 +136,11 @@ function Movie({ src, srtFiles, name }: PropsType) {
               videoRef.current.currentTime = caption.start;
             }
           }}
-          onChange={(adjustment) => updateCache(name, { adjustment })}
+          onChange={(adjustment) => setAdjustments(name, adjustment)}
           activeCaption={currentCaption}
+          onDelete={() => {
+            // TODO: implement
+          }}
         />
       )}
 
