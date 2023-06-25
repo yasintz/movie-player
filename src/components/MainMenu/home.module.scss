@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  :global {
+    body,
+    html,
+    #root {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+  }
+  .container {
+    height: 100%;
+    min-width: 100%;
+
+    @apply bg-white dark:bg-slate-600 flex justify-around items-center md:flex-row flex-col p-8;
+  }
+
+  .category {
+    width: 100%;
+    max-width: 270px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 10px;
+    aspect-ratio: 8 / 5;
+    cursor: pointer;
+    @apply bg-gradient-to-r transition-colors;
+    @apply md:mr-8 md:last:mr-0 mr-0;
+
+    &.movies {
+      @apply from-cyan-400 to-blue-500;
+    }
+    &.series {
+      @apply from-orange-400 to-pink-500;
+    }
+    &.live {
+      @apply from-lime-500 to-emerald-600;
+    }
+    &.info {
+      @apply from-amber-500 to-yellow-600
+    }
+
+    & > svg {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 8px;
+      color: white;
+      @apply text-white xl:w-12 md:w-10 w-8;
+    }
+    & > span {
+      @apply text-white;
+    }
+  }
+}

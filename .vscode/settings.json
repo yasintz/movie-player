@@ -1,0 +1,6 @@
+{
+  "files.exclude": {
+    "**/*.module.scss.d.ts": true
+  },
+  "scss.lint.unknownAtRules": "ignore"
+}
