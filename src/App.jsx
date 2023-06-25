@@ -26,10 +26,10 @@ function App() {
   setInterval(() => dispatch(setTimer60()), 50000);
   setInterval(() => dispatch(setTimer5()), 5000);
 
-  if (window.location.protocol !== 'https:' && window.https === true)
-    window.location = window.location.href.replace('http', 'https');
-  else if (window.location.protocol === 'https:' && window.https === false)
-    window.location = window.location.href.replace('https', 'http');
+  // if (window.location.protocol !== 'https:' && window.https === true)
+  //   window.location = window.location.href.replace('http', 'https');
+  // else if (window.location.protocol === 'https:' && window.https === false)
+  //   window.location = window.location.href.replace('https', 'http');
 
   let url = window.location.hash.replace('#', '');
 
